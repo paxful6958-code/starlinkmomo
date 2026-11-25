@@ -1,0 +1,901 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Starlink Cameroon Reseller — Dashboard</title>
+    <!-- Load Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Load Google Font: Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', '-apple-system', 'BlinkMacSystemFont', 'sans-serif'],
+                    },
+                },
+            },
+        };
+    </script>
+</head>
+
+<body class="bg-[#f5f7fa] text-[#0f172a] font-sans antialiased min-h-screen flex flex-col pb-24 selection:bg-[#1155ff] selection:text-white">
+
+    <!-- ==================== TOP NAVIGATION BAR ==================== -->
+    <header class="bg-black text-white sticky top-0 z-40 border-b border-white/10">
+        <div class="max-w-[1200px] mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
+            <!-- Left: Starlink Stylized Logo Box + Divider + Brand Text -->
+            <button onclick="switchTab('status')" class="flex items-center gap-3.5 text-left focus:outline-none group">
+        <!-- Silver/Grey Starlink Box Emblem -->
+        <div class="w-11 h-7 rounded-[2px] bg-gradient-to-br from-[#e2e8f0] via-[#cbd5e1] to-[#94a3b8] flex items-center justify-center shadow-inner overflow-hidden relative">
+          <svg class="w-8 h-5 text-white drop-shadow-sm" viewBox="0 0 48 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <!-- Stylized Starlink orbital trajectory arc & X cross -->
+            <path d="M4 21C13 9 29 4 45 3" stroke="white" stroke-width="2.1" stroke-linecap="round" />
+            <path d="M11 8L23 19" stroke="white" stroke-width="2" stroke-linecap="round" />
+            <path d="M22 8L12 19" stroke="white" stroke-width="1.6" stroke-linecap="round" opacity="0.85" />
+          </svg>
+        </div>
+        <!-- Vertical Divider -->
+        <span class="h-5 w-[1px] bg-white/25"></span>
+        <!-- Brand Label -->
+        <span class="text-[13px] sm:text-sm font-semibold tracking-tight text-white/95 group-hover:text-white transition-colors">
+          cameroon Reseller
+        </span>
+      </button>
+
+            <!-- Right: Top Navigation Links -->
+            <nav class="flex items-center gap-4 sm:gap-7" aria-label="Top Navigation">
+                <!-- Status Nav Item -->
+                <button onclick="switchTab('status')" data-top-nav="status" class="top-nav-btn flex items-center gap-2 text-xs sm:text-[13px] font-medium text-white transition-colors py-2 px-1">
+          <!-- Signal / Wi-Fi Icon -->
+          <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M5 12.55a11 11 0 0 1 14.08 0" />
+            <path d="M1.42 9a16 16 0 0 1 21.16 0" />
+            <path d="M8.53 16.11a6 6 0 0 1 6.95 0" />
+            <circle cx="12" cy="20" r="1" fill="currentColor" />
+          </svg>
+          <span>Status</span>
+        </button>
+
+                <!-- Plans Nav Item -->
+                <button onclick="switchTab('plans')" data-top-nav="plans" class="top-nav-btn flex items-center gap-2 text-xs sm:text-[13px] font-medium text-neutral-400 hover:text-white transition-colors py-2 px-1">
+          <!-- Home / Package Icon -->
+          <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M3 10.5L12 3l9 7.5" />
+            <path d="M5 9.5V19a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V9.5" />
+            <path d="M9 20v-6h6v6" />
+          </svg>
+          <span>Plans</span>
+        </button>
+
+                <!-- Orders Nav Item -->
+                <button onclick="switchTab('orders')" data-top-nav="orders" class="top-nav-btn flex items-center gap-2 text-xs sm:text-[13px] font-medium text-neutral-400 hover:text-white transition-colors py-2 px-1">
+          <!-- Bullet List Icon -->
+          <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="8" y1="6" x2="21" y2="6" />
+            <line x1="8" y1="12" x2="21" y2="12" />
+            <line x1="8" y1="18" x2="21" y2="18" />
+            <circle cx="4" cy="6" r="1" fill="currentColor" />
+            <circle cx="4" cy="12" r="1" fill="currentColor" />
+            <circle cx="4" cy="18" r="1" fill="currentColor" />
+          </svg>
+          <span>Orders</span>
+        </button>
+            </nav>
+        </div>
+    </header>
+
+    <!-- ==================== MAIN CONTENT CONTAINER ==================== -->
+    <main class="flex-1 w-full max-w-[1200px] mx-auto px-4 sm:px-6 pt-6 pb-8">
+
+        <!-- ==================== VIEW 1: STATUS (PRIMARY DASHBOARD) ==================== -->
+        <section id="view-status" class="space-y-5">
+
+            <!-- 1. Primary Blue CTA Button -->
+            <button onclick="switchTab('plans')" class="w-full py-4 px-6 rounded-xl bg-gradient-to-r from-[#1856f3] to-[#1445c4] hover:from-[#1d5eff] hover:to-[#164cd6] active:scale-[0.995] text-white font-bold text-xs sm:text-sm tracking-wider uppercase flex items-center justify-center gap-2.5 shadow-[0_6px_20px_rgba(24,86,243,0.28)] border border-white/25 transition-all cursor-pointer">
+        <!-- Shopping Bag Icon -->
+        <svg class="w-4 h-4 sm:w-[18px] sm:h-[18px]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M6 7h12l1 12H5L6 7z" />
+          <path d="M9 7V5a3 3 0 0 1 6 0v2" />
+        </svg>
+        <span>CHOOSE YOUR PACKAGE</span>
+      </button>
+
+            <!-- 2. Service Information Hero Card -->
+            <div class="relative overflow-hidden rounded-2xl bg-[#05080f] bg-[radial-gradient(ellipse_at_top_left,_#0f1c36_0%,_#05080f_55%,_#020408_100%)] p-6 sm:p-8 border border-slate-800/80 shadow-sm flex items-center justify-between gap-4">
+                <!-- Left Text Block -->
+                <div class="space-y-2 z-10">
+                    <p class="text-[11px] font-bold tracking-[0.12em] uppercase text-[#2563eb]">
+                        SERVICE INFORMATION
+                    </p>
+                    <h1 id="hero-title" class="text-2xl sm:text-[28px] font-extrabold tracking-tight text-white leading-tight">
+                        Starlink cameroon
+                    </h1>
+                    <p id="hero-subtitle" class="text-xs sm:text-[13px] text-slate-400 font-normal">
+                        Select a plan to activate high-speed satellite internet.
+                    </p>
+                </div>
+
+                <!-- Right Interactive Blue Circle Status Indicator -->
+                <button onclick="toggleLiveTelemetry()" title="Click to toggle live satellite telemetry simulation" class="relative flex-shrink-0 w-14 h-14 sm:w-16 sm:h-16 rounded-full bg-[#1155ff] hover:bg-[#1e60ff] transition-transform active:scale-95 flex items-center justify-center shadow-[0_0_25px_rgba(17,85,255,0.45)] focus:outline-none group"
+                    aria-label="Toggle live speed simulation">
+          <!-- Subtle pulse ring when live telemetry is active -->
+          <span id="telemetry-ping-ring" class="hidden absolute inset-0 rounded-full bg-[#1155ff] animate-ping opacity-30"></span>
+          <span id="telemetry-badge" class="sr-only">Satellite Signal Indicator</span>
+        </button>
+            </div>
+
+            <!-- 3. Metrics 2x2 Grid -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-5">
+
+                <!-- Card 1: DOWNLOAD -->
+                <div class="bg-white rounded-2xl p-6 border border-slate-200/75 shadow-[0_1px_3px_rgba(15,23,42,0.03)] hover:border-slate-300/90 transition-colors">
+                    <div class="flex items-center justify-between mb-3">
+                        <span class="text-[11px] font-bold tracking-[0.08em] uppercase text-slate-500">DOWNLOAD</span>
+                        <!-- Blue Downward Arrow -->
+                        <svg class="w-4 h-4 text-[#1155ff]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+              <line x1="12" y1="5" x2="12" y2="19" />
+              <polyline points="19 12 12 19 5 12" />
+            </svg>
+                    </div>
+                    <div id="metric-download" class="text-3xl sm:text-[32px] font-extrabold tracking-tight text-[#0f172a] leading-none mb-1.5">
+                        155.18
+                    </div>
+                    <div class="text-xs font-medium text-slate-500">Mbps</div>
+                </div>
+
+                <!-- Card 2: UPLOAD -->
+                <div class="bg-white rounded-2xl p-6 border border-slate-200/75 shadow-[0_1px_3px_rgba(15,23,42,0.03)] hover:border-slate-300/90 transition-colors">
+                    <div class="flex items-center justify-between mb-3">
+                        <span class="text-[11px] font-bold tracking-[0.08em] uppercase text-slate-500">UPLOAD</span>
+                        <!-- Green Upward Arrow -->
+                        <svg class="w-4 h-4 text-emerald-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+              <line x1="12" y1="19" x2="12" y2="5" />
+              <polyline points="5 12 12 5 19 12" />
+            </svg>
+                    </div>
+                    <div id="metric-upload" class="text-3xl sm:text-[32px] font-extrabold tracking-tight text-[#0f172a] leading-none mb-1.5">
+                        35.19
+                    </div>
+                    <div class="text-xs font-medium text-slate-500">Mbps</div>
+                </div>
+
+                <!-- Card 3: PING -->
+                <div class="bg-white rounded-2xl p-6 border border-slate-200/75 shadow-[0_1px_3px_rgba(15,23,42,0.03)] hover:border-slate-300/90 transition-colors">
+                    <div class="flex items-center justify-between mb-3">
+                        <span class="text-[11px] font-bold tracking-[0.08em] uppercase text-slate-500">PING</span>
+                    </div>
+                    <div id="metric-ping" class="text-3xl sm:text-[32px] font-extrabold tracking-tight text-[#0f172a] leading-none mb-1.5">
+                        25
+                    </div>
+                    <div class="text-xs font-medium text-slate-500">ms</div>
+                </div>
+
+                <!-- Card 4: JITTER -->
+                <div class="bg-white rounded-2xl p-6 border border-slate-200/75 shadow-[0_1px_3px_rgba(15,23,42,0.03)] hover:border-slate-300/90 transition-colors">
+                    <div class="flex items-center justify-between mb-3">
+                        <span class="text-[11px] font-bold tracking-[0.08em] uppercase text-slate-500">JITTER</span>
+                    </div>
+                    <div id="metric-jitter" class="text-3xl sm:text-[32px] font-extrabold tracking-tight text-[#0f172a] leading-none mb-1.5">
+                        5
+                    </div>
+                    <div class="text-xs font-medium text-slate-500">ms</div>
+                </div>
+
+            </div>
+
+            <!-- 4. Data Usage Card -->
+            <div class="bg-white rounded-2xl p-6 border border-slate-200/75 shadow-[0_1px_3px_rgba(15,23,42,0.03)]">
+                <!-- Header Row -->
+                <div class="flex items-center justify-between mb-5">
+                    <div class="flex items-center gap-2.5">
+                        <!-- Blue Database / Cylinder Stack Icon -->
+                        <svg class="w-5 h-5 text-[#1155ff]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <ellipse cx="12" cy="5" rx="8" ry="3" />
+              <path d="M4 5v6c0 1.66 3.58 3 8 3s8-1.34 8-3V5" />
+              <path d="M4 11v6c0 1.66 3.58 3 8 3s8-1.34 8-3v-6" />
+            </svg>
+                        <h2 class="text-[15px] font-bold text-[#0f172a]">Data Usage</h2>
+                    </div>
+
+                    <!-- Percentage Pill Badge -->
+                    <span id="usage-percent-badge" class="px-2.5 py-0.5 rounded-full bg-slate-100 text-slate-600 text-xs font-bold">
+            44%
+          </span>
+                </div>
+
+                <!-- Progress Track & Fill -->
+                <div class="w-full h-2.5 bg-[#e5e7eb] rounded-full overflow-hidden mb-3">
+                    <div id="usage-progress-bar" class="h-full bg-[#1155ff] rounded-full transition-all duration-500 ease-out" style="width: 44%"></div>
+                </div>
+
+                <!-- Footer Labels -->
+                <div class="flex items-center justify-between text-xs font-medium text-slate-500">
+                    <span id="usage-used-label">43.9 GB</span>
+                    <span id="usage-total-label">100 GB</span>
+                </div>
+            </div>
+
+            <!-- Subtle Interactive Telemetry Controls Bar -->
+            <div class="flex flex-wrap items-center justify-between gap-2 px-1 pt-1 text-xs text-slate-500">
+                <div class="flex items-center gap-2">
+                    <span id="live-status-dot" class="w-2 h-2 rounded-full bg-slate-400"></span>
+                    <span id="live-status-text">Static baseline metrics • Click blue orb or toggle to simulate live dish telemetry</span>
+                </div>
+                <button onclick="toggleLiveTelemetry()" id="telemetry-toggle-btn" class="text-[#1155ff] hover:underline font-semibold focus:outline-none">
+          Start Live Feed
+        </button>
+            </div>
+        </section>
+
+        <!-- ==================== VIEW 2: PLANS ==================== -->
+        <section id="view-plans" class="hidden">
+            <!-- Golden-Yellow Hero Banner -->
+            <div class="rounded-[14px] bg-[#ECC42A] px-6 py-10 sm:px-10 sm:py-11 text-center shadow-[0_2px_10px_rgba(236,196,42,0.22)]">
+                <h2 class="text-2xl sm:text-[32px] font-extrabold text-white tracking-tight leading-tight">
+                    High-Speed Internet
+                </h2>
+                <p class="mt-3.5 max-w-[560px] mx-auto text-[14px] sm:text-[15px] text-[#1f2937] leading-[1.55] font-normal">
+                    Experience the future of connectivity with our
+                    <strong class="font-bold text-[#111827]">Shared Satellite Network</strong>. Using advanced <strong class="font-bold text-[#111827]">Crowdsharing Technology</strong>, we deliver high-speed Starlink data directly to your smartphone,
+                    anywhere in cameroon. Choose your plan and join the network instantly using MTN MoMo or Orange Money.
+                </p>
+            </div>
+
+            <!-- Section Heading: Blue Shopping Bag + Select Your Plan -->
+            <div class="mt-7 mb-4 flex items-center gap-2">
+                <svg class="w-5 h-5 text-[#1248d8]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M6 7h12l1 12H5L6 7z" />
+          <path d="M9 7V5a3 3 0 0 1 6 0v2" />
+        </svg>
+                <h3 class="text-lg sm:text-[20px] font-extrabold text-[#111827] tracking-tight">
+                    Select Your Plan
+                </h3>
+            </div>
+
+            <!-- 3x2 Grid of Plan Cards -->
+            <div id="plans-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+                <!-- Populated dynamically via JS -->
+            </div>
+        </section>
+
+        <!-- ==================== VIEW 3: ORDERS ==================== -->
+        <section id="view-orders" class="hidden space-y-6">
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                <div>
+                    <h2 class="text-xl font-extrabold text-slate-900">Subscription & Order History</h2>
+                    <p class="text-sm text-slate-500">Recent Starlink Cameroon Reseller activations and top-ups.</p>
+                </div>
+                <button onclick="switchTab('plans')" class="self-start sm:self-auto px-4 py-2 rounded-xl bg-[#1155ff] text-white text-xs font-bold hover:bg-[#0e46d4] transition-colors">
+          + New Package Order
+        </button>
+            </div>
+
+            <div id="orders-list" class="space-y-3">
+                <!-- Populated dynamically via JS -->
+            </div>
+        </section>
+
+        <!-- ==================== VIEW 4: SETTINGS ==================== -->
+        <section id="view-settings" class="hidden space-y-6">
+            <div>
+                <h2 class="text-xl font-extrabold text-slate-900">Terminal & Reseller Settings</h2>
+                <p class="text-sm text-slate-500">Manage your Starlink dish hardware, telemetry, and Douala/Yaounde gateway preferences.</p>
+            </div>
+
+            <div class="bg-white rounded-2xl border border-slate-200/80 divide-y divide-slate-100 shadow-sm">
+                <div class="p-5 flex items-center justify-between gap-4">
+                    <div>
+                        <h3 class="text-sm font-bold text-slate-900">Live Speed Telemetry Simulation</h3>
+                        <p class="text-xs text-slate-500 mt-0.5">Simulate real-time fluctuations around baseline speeds (155.18 Mbps / 35.19 Mbps).</p>
+                    </div>
+                    <button onclick="toggleLiveTelemetry()" id="settings-telemetry-switch" class="px-4 py-2 rounded-xl bg-slate-100 text-slate-700 text-xs font-bold hover:bg-slate-200 transition-colors">
+            Enable
+          </button>
+                </div>
+
+                <div class="p-5 flex items-center justify-between gap-4">
+                    <div>
+                        <h3 class="text-sm font-bold text-slate-900">Dish Terminal ID</h3>
+                        <p class="text-xs text-slate-500 mt-0.5">UT-CM-00849210-DLA • Online (Clear Sky View)</p>
+                    </div>
+                    <span class="px-3 py-1 rounded-full bg-emerald-50 text-emerald-700 text-xs font-bold">Connected</span>
+                </div>
+
+                <div class="p-5 flex items-center justify-between gap-4">
+                    <div>
+                        <h3 class="text-sm font-bold text-slate-900">Reset Metrics to Default Baseline</h3>
+                        <p class="text-xs text-slate-500 mt-0.5">Restore original 155.18 Mbps download, 35.19 Mbps upload, and 44% usage.</p>
+                    </div>
+                    <button onclick="resetDashboardDefaults()" class="px-4 py-2 rounded-xl border border-slate-200 text-slate-700 text-xs font-semibold hover:bg-slate-50 transition-colors">
+            Reset Defaults
+          </button>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- ==================== MTN MOMO ACTIVATION MODAL ==================== -->
+    <div id="package-modal" class="hidden fixed inset-0 z-50 bg-black/60 backdrop-blur-xs flex items-center justify-center p-4" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+        <div class="bg-white rounded-2xl max-w-md w-full p-6 shadow-2xl border border-slate-200">
+            <div class="flex items-center justify-between pb-4 border-b border-slate-100">
+                <div class="flex items-center gap-2.5">
+                    <span class="px-2.5 py-1 rounded-md bg-[#ffcc00] text-black text-[11px] font-extrabold tracking-tight">
+            MTN MoMo
+          </span>
+                    <h3 id="modal-title" class="text-base font-extrabold text-slate-900">Instant Activation</h3>
+                </div>
+                <button onclick="closePackageModal()" class="w-8 h-8 rounded-full bg-slate-100 hover:bg-slate-200 flex items-center justify-center text-slate-600 transition-colors" aria-label="Close modal">
+          &times;
+        </button>
+            </div>
+
+            <div id="modal-plan-summary" class="py-4 space-y-4">
+                <!-- Populated via JS for the clicked plan -->
+            </div>
+
+            <div class="pt-3 border-t border-slate-100 flex items-center justify-end gap-2.5">
+                <button onclick="closePackageModal()" class="px-4 py-2.5 rounded-xl text-xs font-semibold text-slate-600 hover:bg-slate-100 transition-colors">
+          Cancel
+        </button>
+                <button onclick="confirmMomoActivation()" class="px-5 py-2.5 rounded-xl bg-[#1155ff] hover:bg-[#0e46d4] text-white text-xs font-bold shadow-sm transition-colors cursor-pointer">
+          Pay & Activate with MoMo
+        </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ==================== TOAST NOTIFICATION ==================== -->
+    <div id="toast-banner" class="fixed top-20 right-4 sm:right-6 z-50 transform translate-y-[-20px] opacity-0 pointer-events-none transition-all duration-300 bg-[#05080f] text-white px-4 py-3 rounded-xl shadow-lg border border-white/15 flex items-center gap-3 text-xs font-medium">
+        <span class="w-2.5 h-2.5 rounded-full bg-[#1155ff]"></span>
+        <span id="toast-message">Package activated!</span>
+    </div>
+
+    <!-- ==================== FIXED BOTTOM NAVIGATION BAR ==================== -->
+    <nav class="fixed bottom-0 inset-x-0 bg-white border-t border-slate-200/90 z-40 h-[68px]" aria-label="Bottom Navigation">
+        <div class="max-w-[1200px] mx-auto h-full grid grid-cols-4">
+
+            <!-- Tab 1: Status -->
+            <button onclick="switchTab('status')" data-bottom-nav="status" class="bottom-nav-btn flex flex-col items-center justify-center gap-1 text-[#1155ff] transition-colors focus:outline-none">
+        <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M5 12.55a11 11 0 0 1 14.08 0" />
+          <path d="M1.42 9a16 16 0 0 1 21.16 0" />
+          <path d="M8.53 16.11a6 6 0 0 1 6.95 0" />
+          <circle cx="12" cy="20" r="1" fill="currentColor" />
+        </svg>
+        <span class="text-[11px] font-semibold">Status</span>
+      </button>
+
+            <!-- Tab 2: Plans -->
+            <button onclick="switchTab('plans')" data-bottom-nav="plans" class="bottom-nav-btn flex flex-col items-center justify-center gap-1 text-slate-500 hover:text-slate-800 transition-colors focus:outline-none">
+        <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M6 7h12l1 12H5L6 7z" />
+          <path d="M9 7V5a3 3 0 0 1 6 0v2" />
+        </svg>
+        <span class="text-[11px] font-medium">Plans</span>
+      </button>
+
+            <!-- Tab 3: Orders -->
+            <button onclick="switchTab('orders')" data-bottom-nav="orders" class="bottom-nav-btn flex flex-col items-center justify-center gap-1 text-slate-500 hover:text-slate-800 transition-colors focus:outline-none">
+        <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="8" y1="6" x2="21" y2="6" />
+          <line x1="8" y1="12" x2="21" y2="12" />
+          <line x1="8" y1="18" x2="21" y2="18" />
+          <circle cx="4" cy="6" r="1" fill="currentColor" />
+          <circle cx="4" cy="12" r="1" fill="currentColor" />
+          <circle cx="4" cy="18" r="1" fill="currentColor" />
+        </svg>
+        <span class="text-[11px] font-medium">Orders</span>
+      </button>
+
+            <!-- Tab 4: Settings -->
+            <button onclick="switchTab('settings')" data-bottom-nav="settings" class="bottom-nav-btn flex flex-col items-center justify-center gap-1 text-slate-500 hover:text-slate-800 transition-colors focus:outline-none">
+        <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="3" />
+          <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z" />
+        </svg>
+        <span class="text-[11px] font-medium">Settings</span>
+      </button>
+
+        </div>
+    </nav>
+
+    <!-- ==================== JAVASCRIPT LOGIC ==================== -->
+    <script>
+        // 1. Starlink Cameroon Packages Catalog (Converted from UGX to Cameroon XAF)
+        const PACKAGES = [{
+            id: 'basic-plan',
+            name: 'Basic Plan',
+            badge: '50GB',
+            capGB: 50,
+            unlimited: false,
+            priceFormatted: 'XAF 250',
+            description: 'Up to 12 devices. Perfect for small households.',
+            speedDown: 120.40,
+            speedUp: 24.50
+        }, {
+            id: 'standard-plan',
+            name: 'Standard Plan',
+            badge: '100GB',
+            capGB: 100,
+            unlimited: false,
+            priceFormatted: 'XAF 500',
+            description: 'Up to 25 devices. High-speed, low-latency internet.',
+            speedDown: 155.18,
+            speedUp: 35.19
+        }, {
+            id: 'premium-plan',
+            name: 'Premium Plan',
+            badge: '250GB',
+            capGB: 250,
+            unlimited: false,
+            priceFormatted: 'XAF 850',
+            description: 'Up to 50 devices. Best for high-demand users.',
+            speedDown: 185.60,
+            speedUp: 38.90
+        }, {
+            id: 'ultra-plan',
+            name: 'Ultra Plan',
+            badge: '350GB',
+            capGB: 350,
+            unlimited: false,
+            priceFormatted: 'XAF 1,400',
+            description: 'High-speed data for power users.',
+            speedDown: 210.25,
+            speedUp: 42.10
+        }, {
+            id: 'bussiness-plan',
+            name: 'Bussiness Plan',
+            badge: '500GB',
+            capGB: 500,
+            unlimited: false,
+            priceFormatted: 'XAF 2,500',
+            description: 'Reliability for connectivity',
+            speedDown: 245.80,
+            speedUp: 48.75
+        }, {
+            id: 'unlimited-plan',
+            name: 'Unlimited Plan',
+            badge: 'Truly Unlimited',
+            capGB: 1000,
+            unlimited: true,
+            priceFormatted: 'XAF 4,200',
+            description: 'Unlimited devices. Maximum performance for power users.',
+            speedDown: 280.50,
+            speedUp: 55.40
+        }];
+
+        // 2. Application State
+        const state = {
+            activeTab: 'status',
+            selectedPlanId: null,
+            pendingPlanId: null,
+            isUnlimited: false,
+            usedGB: 43.9,
+            capGB: 100,
+            baseDown: 155.18,
+            baseUp: 35.19,
+            basePing: 25,
+            baseJitter: 5,
+            liveTelemetry: false,
+            telemetryInterval: null,
+            orders: [{
+                id: 'ORD-CM-9041',
+                planName: 'Standard Plan (100GB)',
+                amount: 'XAF 500',
+                phone: '+237 672 418920',
+                date: 'Active Cycle',
+                status: 'Active'
+            }]
+        };
+
+        // Redirect user to login.html with the selected plan details
+        function redirectToLogin(pkgId) {
+            const pkg = PACKAGES.find(p => p.id === pkgId) || PACKAGES[0];
+            const loginUrl = `login.html?plan=${encodeURIComponent(pkg.name)}&price=${encodeURIComponent(pkg.priceFormatted)}&data=${encodeURIComponent(pkg.badge)}`;
+            window.location.href = loginUrl;
+        }
+
+        // 3. Render 3x2 Plan Cards matching screenshot layout
+        function renderPackages() {
+            const plansGrid = document.getElementById('plans-grid');
+
+            plansGrid.innerHTML = PACKAGES.map(pkg => {
+                const isSelected = state.selectedPlanId === pkg.id;
+                return `
+          <button
+            type="button"
+            onclick="redirectToLogin('${pkg.id}')"
+            class="text-left w-full bg-white rounded-[14px] p-6 border ${isSelected ? 'border-[#1248d8] ring-2 ring-[#1248d8]/15' : 'border-[#e5e7eb] hover:border-[#1248d8]/60'} shadow-[0_1px_3px_rgba(15,23,42,0.03)] hover:shadow-md hover:-translate-y-0.5 transition-all cursor-pointer flex flex-col justify-between min-h-[172px] focus:outline-none focus:ring-2 focus:ring-[#1248d8]"
+          >
+            <div class="w-full">
+              <!-- Top Row: Title + Blue Pill Badge -->
+              <div class="flex items-start justify-between gap-3">
+                <h4 class="text-[16px] sm:text-[17px] font-bold text-[#111827] leading-snug">
+                  ${pkg.name}
+                </h4>
+                <span class="flex-shrink-0 px-2.5 py-0.5 rounded-full bg-[#dbeafe] text-[#1d4ed8] text-[11px] font-bold tracking-tight">
+                  ${pkg.badge}
+                </span>
+              </div>
+
+              <!-- Middle Description -->
+              <p class="mt-2.5 text-[12px] sm:text-[12.5px] text-[#6b7280] leading-relaxed">
+                ${pkg.description}
+              </p>
+            </div>
+
+            <!-- Bottom Price Row -->
+            <div class="mt-5 pt-1 flex items-baseline gap-1">
+              <span class="text-[22px] sm:text-[24px] font-extrabold text-[#0f172a] tracking-tight leading-none">
+                ${pkg.priceFormatted}
+              </span>
+              <span class="text-[11px] font-medium text-[#6b7280]">/month</span>
+            </div>
+          </button>
+        `;
+            }).join('');
+        }
+
+        // 4. Render Orders View
+        function renderOrders() {
+            const ordersList = document.getElementById('orders-list');
+            ordersList.innerHTML = state.orders.map(order => `
+        <div class="bg-white rounded-2xl p-5 border border-slate-200/80 flex flex-col sm:flex-row sm:items-center justify-between gap-3 shadow-xs">
+          <div>
+            <div class="flex items-center gap-2.5">
+              <span class="text-xs font-bold text-slate-400">${order.id}</span>
+              <span class="px-2.5 py-0.5 rounded-full bg-emerald-50 text-emerald-700 text-[11px] font-bold">${order.status}</span>
+            </div>
+            <h3 class="text-sm font-bold text-slate-900 mt-1">${order.planName}</h3>
+            <p class="text-xs text-slate-500">${order.date} • MTN MoMo / Orange Money (${order.phone || '+237 672 418920'})</p>
+          </div>
+          <div class="text-left sm:text-right">
+            <div class="text-sm font-extrabold text-slate-900">${order.amount}</div>
+            <div class="text-[11px] text-slate-400">Starlink Cameroon Reseller</div>
+          </div>
+        </div>
+      `).join('');
+        }
+
+        // 5. Open MTN MoMo Activation Modal for Specific Plan
+        function openPackageModal(pkgId) {
+            const pkg = PACKAGES.find(p => p.id === pkgId) || PACKAGES[1];
+            state.pendingPlanId = pkg.id;
+
+            const summaryEl = document.getElementById('modal-plan-summary');
+            summaryEl.innerHTML = `
+        <div class="rounded-xl bg-slate-50 border border-slate-200/80 p-4 flex items-center justify-between gap-3">
+          <div>
+            <span class="inline-block px-2 py-0.5 rounded-full bg-[#dbeafe] text-[#1d4ed8] text-[10px] font-bold mb-1">
+              ${pkg.badge}
+            </span>
+            <h4 class="text-base font-extrabold text-slate-900">${pkg.name}</h4>
+            <p class="text-xs text-slate-500 mt-0.5">${pkg.description}</p>
+          </div>
+          <div class="text-right flex-shrink-0">
+            <div class="text-base font-extrabold text-[#1248d8]">${pkg.priceFormatted}</div>
+            <div class="text-[11px] text-slate-400">/month</div>
+          </div>
+        </div>
+
+        <div>
+          <label for="momo-phone-input" class="block text-xs font-bold text-slate-700 mb-1.5">
+            Cameroon Mobile Money Number (MTN MoMo / Orange Money)
+          </label>
+          <input
+            id="momo-phone-input"
+            type="tel"
+            value="+237 672 418920"
+            placeholder="+237 6XX XXXXXX"
+            class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm font-medium text-slate-900 focus:outline-none focus:border-[#1155ff] focus:ring-2 focus:ring-[#1155ff]/15"
+          />
+          <p class="text-[11px] text-slate-500 mt-1.5">
+            A USSD prompt will be sent to your handset to authorize <strong>${pkg.priceFormatted}</strong>.
+          </p>
+        </div>
+      `;
+
+            document.getElementById('package-modal').classList.remove('hidden');
+        }
+
+        function confirmMomoActivation() {
+            const phoneInput = document.getElementById('momo-phone-input');
+            const phoneVal = phoneInput ? phoneInput.value.trim() : '+237 672 418920';
+            if (!phoneVal) {
+                showToast('Please enter a valid Cameroon Mobile Money number');
+                return;
+            }
+            activatePackage(state.pendingPlanId, phoneVal);
+        }
+
+        // 6. Activate Selected Package
+        function activatePackage(pkgId, phoneNumber = '+237 672 418920') {
+            const pkg = PACKAGES.find(p => p.id === pkgId);
+            if (!pkg) return;
+
+            state.selectedPlanId = pkg.id;
+            state.isUnlimited = Boolean(pkg.unlimited);
+            state.capGB = pkg.capGB;
+            state.baseDown = pkg.speedDown;
+            state.baseUp = pkg.speedUp;
+
+            // Update Hero Card
+            document.getElementById('hero-title').textContent = `Starlink cameroon • ${pkg.name}`;
+            document.getElementById('hero-subtitle').textContent = `Active high-speed satellite internet (${pkg.priceFormatted}/mo).`;
+
+            // Update Metrics
+            document.getElementById('metric-download').textContent = pkg.speedDown.toFixed(2);
+            document.getElementById('metric-upload').textContent = pkg.speedUp.toFixed(2);
+
+            // Update Data Usage Bar & Labels
+            updateUsageDisplay();
+
+            // Add Order Entry
+            const orderNum = `ORD-CM-${Math.floor(1000 + Math.random() * 9000)}`;
+            state.orders.unshift({
+                id: orderNum,
+                planName: `${pkg.name} (${pkg.badge})`,
+                amount: pkg.priceFormatted,
+                phone: phoneNumber,
+                date: 'Activated just now',
+                status: 'Active'
+            });
+
+            renderPackages();
+            renderOrders();
+            closePackageModal();
+            switchTab('status');
+            showToast(`${pkg.name} activated via Mobile Money!`);
+        }
+
+        function confirmMomoActivation() {
+            const phoneInput = document.getElementById('momo-phone-input');
+            const phoneVal = phoneInput ? phoneInput.value.trim() : '+256 772 418920';
+            if (!phoneVal) {
+                showToast('Please enter a valid MTN MoMo phone number');
+                return;
+            }
+            activatePackage(state.pendingPlanId, phoneVal);
+        }
+
+        // 6. Activate Selected Package
+        function activatePackage(pkgId, phoneNumber = '+256 772 418920') {
+            const pkg = PACKAGES.find(p => p.id === pkgId);
+            if (!pkg) return;
+
+            state.selectedPlanId = pkg.id;
+            state.isUnlimited = Boolean(pkg.unlimited);
+            state.capGB = pkg.capGB;
+            state.baseDown = pkg.speedDown;
+            state.baseUp = pkg.speedUp;
+
+            // Update Hero Card
+            document.getElementById('hero-title').textContent = `Starlink uganda • ${pkg.name}`;
+            document.getElementById('hero-subtitle').textContent = `Active high-speed satellite internet (${pkg.priceFormatted}/mo).`;
+
+            // Update Metrics
+            document.getElementById('metric-download').textContent = pkg.speedDown.toFixed(2);
+            document.getElementById('metric-upload').textContent = pkg.speedUp.toFixed(2);
+
+            // Update Data Usage Bar & Labels
+            updateUsageDisplay();
+
+            // Add Order Entry
+            const orderNum = `ORD-UG-${Math.floor(1000 + Math.random() * 9000)}`;
+            state.orders.unshift({
+                id: orderNum,
+                planName: `${pkg.name} (${pkg.badge})`,
+                amount: pkg.priceFormatted,
+                phone: phoneNumber,
+                date: 'Activated just now',
+                status: 'Active'
+            });
+
+            renderPackages();
+            renderOrders();
+            closePackageModal();
+            switchTab('status');
+            showToast(`${pkg.name} activated via MTN MoMo!`);
+        }
+
+        // 7. Update Data Usage Bar & Percentage
+        function updateUsageDisplay() {
+            if (state.isUnlimited) {
+                document.getElementById('usage-percent-badge').textContent = 'Unlimited';
+                document.getElementById('usage-progress-bar').style.width = '18%';
+                document.getElementById('usage-used-label').textContent = `${state.usedGB.toFixed(1)} GB`;
+                document.getElementById('usage-total-label').textContent = 'Truly Unlimited';
+                return;
+            }
+
+            const pct = Math.min(100, Math.round((state.usedGB / state.capGB) * 100));
+            document.getElementById('usage-percent-badge').textContent = `${pct}%`;
+            document.getElementById('usage-progress-bar').style.width = `${pct}%`;
+            document.getElementById('usage-used-label').textContent = `${state.usedGB.toFixed(1)} GB`;
+            document.getElementById('usage-total-label').textContent = `${state.capGB} GB`;
+        }
+
+        // 8. Navigation Tab Switching (Synchronizes Top & Bottom Nav)
+        function switchTab(tabName) {
+            state.activeTab = tabName;
+            const statusViews = ['status', 'orders', 'settings'];
+
+            const statusEl = document.getElementById('view-status');
+            const plansEl = document.getElementById('view-plans');
+            const ordersEl = document.getElementById('view-orders');
+            const settingsEl = document.getElementById('view-settings');
+
+            if (tabName === 'plans') {
+                if (statusEl) statusEl.classList.add('hidden');
+                if (plansEl) plansEl.classList.remove('hidden');
+            } else if (statusViews.includes(tabName)) {
+                if (statusEl) statusEl.classList.remove('hidden');
+                if (plansEl) plansEl.classList.add('hidden');
+            }
+
+            if (ordersEl) ordersEl.classList.add('hidden');
+            if (settingsEl) settingsEl.classList.add('hidden');
+
+            // Update Top Nav Styles
+            document.querySelectorAll('.top-nav-btn').forEach(btn => {
+                const target = btn.getAttribute('data-top-nav');
+                if (target === tabName) {
+                    btn.classList.remove('text-neutral-400');
+                    btn.classList.add('text-white');
+                } else {
+                    btn.classList.remove('text-white');
+                    btn.classList.add('text-neutral-400');
+                }
+            });
+
+            // Update Bottom Nav Styles
+            document.querySelectorAll('.bottom-nav-btn').forEach(btn => {
+                const target = btn.getAttribute('data-bottom-nav');
+                const label = btn.querySelector('span');
+                if (target === tabName) {
+                    btn.classList.remove('text-slate-500');
+                    btn.classList.add('text-[#1155ff]');
+                    if (label) {
+                        label.classList.remove('font-medium');
+                        label.classList.add('font-semibold');
+                    }
+                } else {
+                    btn.classList.remove('text-[#1155ff]');
+                    btn.classList.add('text-slate-500');
+                    if (label) {
+                        label.classList.remove('font-semibold');
+                        label.classList.add('font-medium');
+                    }
+                }
+            });
+
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+        }
+
+        // 9. Modal Controls
+        function closePackageModal() {
+            document.getElementById('package-modal').classList.add('hidden');
+        }
+
+        // Close modal on backdrop click
+        document.getElementById('package-modal').addEventListener('click', (e) => {
+            if (e.target.id === 'package-modal') {
+                closePackageModal();
+            }
+        });
+
+        // 9. Live Telemetry Simulation Toggle
+        function toggleLiveTelemetry() {
+            state.liveTelemetry = !state.liveTelemetry;
+            const ring = document.getElementById('telemetry-ping-ring');
+            const dot = document.getElementById('live-status-dot');
+            const statusText = document.getElementById('live-status-text');
+            const toggleBtn = document.getElementById('telemetry-toggle-btn');
+            const settingsBtn = document.getElementById('settings-telemetry-switch');
+
+            if (state.liveTelemetry) {
+                ring.classList.remove('hidden');
+                dot.classList.remove('bg-slate-400');
+                dot.classList.add('bg-emerald-500', 'animate-pulse');
+                statusText.textContent = 'Live Starlink LEO satellite telemetry active (updating every 2s)';
+                toggleBtn.textContent = 'Stop Live Feed';
+                settingsBtn.textContent = 'Disable';
+                settingsBtn.classList.add('bg-[#1155ff]', 'text-white');
+
+                state.telemetryInterval = setInterval(() => {
+                    const downFluct = (Math.random() - 0.48) * 14;
+                    const upFluct = (Math.random() - 0.48) * 4.5;
+                    const pingFluct = Math.floor((Math.random() - 0.5) * 6);
+                    const jitterFluct = Math.floor((Math.random() - 0.5) * 3);
+
+                    const newDown = Math.max(45, state.baseDown + downFluct).toFixed(2);
+                    const newUp = Math.max(8, state.baseUp + upFluct).toFixed(2);
+                    const newPing = Math.max(18, state.basePing + pingFluct);
+                    const newJitter = Math.max(2, state.baseJitter + jitterFluct);
+
+                    document.getElementById('metric-download').textContent = newDown;
+                    document.getElementById('metric-upload').textContent = newUp;
+                    document.getElementById('metric-ping').textContent = newPing;
+                    document.getElementById('metric-jitter').textContent = newJitter;
+                }, 2000);
+
+                showToast('Live satellite telemetry enabled');
+            } else {
+                clearInterval(state.telemetryInterval);
+                ring.classList.add('hidden');
+                dot.classList.remove('bg-emerald-500', 'animate-pulse');
+                dot.classList.add('bg-slate-400');
+                statusText.textContent = 'Static baseline metrics • Click blue orb or toggle to simulate live dish telemetry';
+                toggleBtn.textContent = 'Start Live Feed';
+                settingsBtn.textContent = 'Enable';
+                settingsBtn.classList.remove('bg-[#1155ff]', 'text-white');
+
+                // Restore current baseline values
+                document.getElementById('metric-download').textContent = state.baseDown.toFixed(2);
+                document.getElementById('metric-upload').textContent = state.baseUp.toFixed(2);
+                document.getElementById('metric-ping').textContent = state.basePing;
+                document.getElementById('metric-jitter').textContent = state.baseJitter;
+            }
+        }
+
+        // 10. Reset Defaults
+        function resetDashboardDefaults() {
+            if (state.liveTelemetry) {
+                toggleLiveTelemetry();
+            }
+            state.selectedPlanId = null;
+            state.isUnlimited = false;
+            state.usedGB = 43.9;
+            state.capGB = 100;
+            state.baseDown = 155.18;
+            state.baseUp = 35.19;
+            state.basePing = 25;
+            state.baseJitter = 5;
+
+            document.getElementById('hero-title').textContent = 'Starlink cameroon';
+            document.getElementById('hero-subtitle').textContent = 'Select a plan to activate high-speed satellite internet.';
+            document.getElementById('metric-download').textContent = '155.18';
+            document.getElementById('metric-upload').textContent = '35.19';
+            document.getElementById('metric-ping').textContent = '25';
+            document.getElementById('metric-jitter').textContent = '5';
+            updateUsageDisplay();
+            renderPackages();
+            switchTab('status');
+            showToast('Dashboard reset to default values');
+        }
+
+        // 11. Toast Helper
+        let toastTimeout;
+
+        function showToast(msg) {
+            const toast = document.getElementById('toast-banner');
+            document.getElementById('toast-message').textContent = msg;
+            toast.classList.remove('opacity-0', 'translate-y-[-20px]');
+            toast.classList.add('opacity-100', 'translate-y-0');
+
+            clearTimeout(toastTimeout);
+            toastTimeout = setTimeout(() => {
+                toast.classList.remove('opacity-100', 'translate-y-0');
+                toast.classList.add('opacity-0', 'translate-y-[-20px]');
+            }, 3000);
+        }
+
+        // Initial Render
+        renderPackages();
+        renderOrders();
+        updateUsageDisplay();
+    </script>
+</body>
+
+</html>
